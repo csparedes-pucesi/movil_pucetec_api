@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
+import 'package:movil_pucetec_api/routes/app_routes.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -60,10 +63,6 @@ class LoginPage extends ConsumerWidget {
                   ),
                 ),
                 onPressed: () async {
-                  // Navigator.pushNamed(context, '/dashboard');
-                  print(
-                      "${_emailController.text}: ${_passwordController.text}");
-
                   ref
                       .read(emailProvider.notifier)
                       .update((state) => state = _emailController.text);
@@ -72,10 +71,29 @@ class LoginPage extends ConsumerWidget {
                       .update((state) => state = _passwordController.text);
 
                   final resp = await ref.read(loginProvider.future);
-                  print(resp);
+
+                  if (resp["status"] == 200) {
+                    // 1. capturamos los datos
+                    final token = resp["data"]["token"];
+                    // 2. guardamos los datos en el shared preferences
+                    await SharedPrefs.prefs.setString('token', token);
+                    // 3. redireccionamos a la pagina de dashboard
+                    context.go(RoutesNames.dashboard);
+                  } else {
+                    // Capturar el mensaje desde back
+                    final msg = resp["data"]["message"];
+                    // Guardar el mensaje en el provider
+                    ref
+                        .read(msgProvider.notifier)
+                        .update((state) => msg.toString());
+                  }
                 },
                 child: const Text('Login'),
               ),
+            ),
+            Text(
+              ref.watch(msgProvider),
+              style: const TextStyle(fontSize: 20, color: Colors.red),
             ),
           ],
         ),
