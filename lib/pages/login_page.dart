@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:movil_pucetec_api/config/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
+import 'package:movil_pucetec_api/routes/app_routes.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -73,9 +76,26 @@ class LoginPage extends ConsumerWidget {
 
                   final resp = await ref.read(loginProvider.future);
                   print(resp);
+                  if (resp['status'] == 200) {
+                    // capturamos los datos
+                    final token = resp['data']['token'];
+                    // guardar los datos en el shared preferences
+                    await SharedPrefs.prefs.setString('token', token);
+                    // redireccionamos a la pagina de dashboard
+                    context.go(RoutesNames.dashboard);
+                  } else {
+                    // capturar los mensajes desde backend
+                    final msg = resp['data']['message'];
+                    ref.read(msgProvider.notifier)
+                      .update((state) => msg.toString());
+                  }
                 },
                 child: const Text('Login'),
               ),
+            ),
+            Text(
+              ref.watch(msgProvider),
+              style: const TextStyle(fontSize: 20, color: Colors.red),
             ),
           ],
         ),

@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movil_pucetec_api/config/shared_prefs.dart';
 
 import 'routes/app_routes.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefs.configPrefs();
   HttpOverrides.global = MyHttpOverrides();
   runApp(const ProviderScope(child: MyApp()));
 }
