@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movil_pucetec_api/config/shared_prefs.dart';
+import 'package:movil_pucetec_api/model/product_model.dart';
 
 final productListProvider = StateProvider<List<dynamic>>((ref) => []);
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 final productProvider =
-    FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
+    FutureProvider.autoDispose<List<ProductModel>>((ref) async {
   final dio = ref.watch(dioProvider);
   final response = await dio.get('https://pucei.edu.ec:9108/products',
       options: Options(
@@ -15,8 +16,9 @@ final productProvider =
           "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
         },
       ));
-  return <String, dynamic> {
-    "data": response.data,
-    "status": response.statusCode,
-  };
+  final List<dynamic> responseData = response.data;
+  final List<ProductModel> products = responseData.map((prod) {
+    return ProductModel.fromJson(prod);
+  }).toList();
+  return products;
 });
