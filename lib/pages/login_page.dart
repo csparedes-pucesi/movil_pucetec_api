@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -27,6 +28,7 @@ class LoginPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -86,6 +88,14 @@ class LoginPage extends ConsumerWidget {
                     ref
                         .read(msgProvider.notifier)
                         .update((state) => msg.toString());
+                    Fluttertoast.showToast(
+                        msg: "This is Center Short Toast",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
                   }
                 },
                 child: const Text('Login'),

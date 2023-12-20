@@ -1,0 +1,23 @@
+class Category {
+  String id;
+  String name;
+  String description;
+
+  Category({
+    required this.id,
+    required this.name,
+    required this.description,
+  });
+
+  factory Category.fromJson(Map<String, dynamic> json) => Category(
+        id: json["_id"],
+        name: json["name"],
+        description: json["description"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "_id": id,
+        "name": name,
+        "description": description,
+      };
+}
