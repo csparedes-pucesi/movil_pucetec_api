@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
+
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -27,6 +28,7 @@ class LoginPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
@@ -78,7 +80,7 @@ class LoginPage extends ConsumerWidget {
                     // 2. guardamos los datos en el shared preferences
                     await SharedPrefs.prefs.setString('token', token);
                     // 3. redireccionamos a la pagina de dashboard
-                    context.go(RoutesNames.dashboard);
+                    ref.read(routerProvider).go(RoutesNames.dashboard);
                   } else {
                     // Capturar el mensaje desde back
                     final msg = resp["data"]["message"];
@@ -86,14 +88,20 @@ class LoginPage extends ConsumerWidget {
                     ref
                         .read(msgProvider.notifier)
                         .update((state) => msg.toString());
+
+                    Fluttertoast.showToast(
+                      msg: msg.toString(),
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 20.0,
+                    );
                   }
                 },
                 child: const Text('Login'),
               ),
-            ),
-            Text(
-              ref.watch(msgProvider),
-              style: const TextStyle(fontSize: 20, color: Colors.red),
             ),
           ],
         ),
