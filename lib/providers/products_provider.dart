@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/models/product_model.dart';
 
-
+final productListProvider = StateProvider((ref) => []);
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 final productsProvider =
@@ -18,10 +18,10 @@ final productsProvider =
       },
     ),
   );
- 
- final List <dynamic> responseData = response.data;
- final List <ProductModel> products = responseData.map((prod){
+
+  final List<dynamic> responseData = response.data;
+  final List<ProductModel> products = responseData.map((prod) {
     return ProductModel.fromJson(prod);
- }).toList();
- return products;
+  }).toList();
+  return products;
 });
