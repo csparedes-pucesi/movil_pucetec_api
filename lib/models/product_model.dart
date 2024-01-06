@@ -6,11 +6,10 @@ import 'dart:convert';
 
 import 'package:movil_pucetec_api/models/category_model.dart';
 
-List<ProductModel> welcomeFromJson(String str) => List<ProductModel>.from(
-    json.decode(str).map((x) => ProductModel.fromJson(x)));
+ProductModel productModelFromJson(String str) =>
+    ProductModel.fromJson(json.decode(str));
 
-String welcomeToJson(List<ProductModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String productModelToJson(ProductModel data) => json.encode(data.toJson());
 
 class ProductModel {
   String id;
