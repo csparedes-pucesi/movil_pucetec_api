@@ -34,7 +34,7 @@ class DashboardPage extends ConsumerWidget {
                 loading: () => const CircularProgressIndicator())),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            ref.read(routerProvider).go(RoutesNames.createProduct);
+            ref.read(routerProvider).push(RoutesNames.createProduct);
           },
           child: const Icon(Icons.add),
         ));

@@ -9,7 +9,7 @@ String productModelToJson(ProductModel data) => json.encode(data.toJson());
 class ProductModel {
   final String? id;
   final String? name;
-  final int? unitPrice;
+  final double? unitPrice;
   final String? description;
   final String? presentation;
   final Category? category;
@@ -26,7 +26,9 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["_id"],
         name: json["name"],
-        unitPrice: json["unitPrice"],
+        unitPrice: json["unitPrice"] is int
+          ?(json["unitPrice"] as int).toDouble()
+          : json["unitPrice"] as double?,
         description: json["description"],
         presentation: json["presentation"],
         category: json["category"] == null ? null : Category.fromJson(json["category"]),
