@@ -18,11 +18,12 @@ final productsProvider =
       },
     ),
   );
+  
 
   final List<dynamic> responseData = response.data;
 
   final List<ProductModel> products = responseData.map((prod){
     return ProductModel.fromJson(prod);
-  }).toList(); 
+  }).toList();
   return products;
 });
