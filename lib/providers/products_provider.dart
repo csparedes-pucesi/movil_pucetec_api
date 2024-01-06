@@ -1,0 +1,24 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movil_pucetec_api/config/shared_prefs.dart';
+import 'package:movil_pucetec_api/model/product_model.dart';
+
+final productListProvider = StateProvider<List<dynamic>>((ref) => []);
+
+final dioProvider = Provider<Dio>((ref) => Dio());
+final productProvider =
+    FutureProvider.autoDispose<List<ProductModel>>((ref) async {
+  final dio = ref.watch(dioProvider);
+  final response = await dio.get('https://pucei.edu.ec:9108/products',
+      options: Options(
+        validateStatus: (status) => status! < 500,
+        headers: {
+          "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
+        },
+      ));
+  final List<dynamic> responseData = response.data;
+  final List<ProductModel> products = responseData.map((prod) {
+    return ProductModel.fromJson(prod);
+  }).toList();
+  return products;
+});
