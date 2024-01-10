@@ -1,6 +1,7 @@
 # Nombre del Proyecto
 
-Descripción breve del proyecto.
+
+Descripción breve del proyecto. 🤠
 
 ## Comenzando 🚀
 
@@ -32,7 +33,8 @@ flutter pub get
 flutter test
 ```
 
-![image](https://github.com/csparedes-pucesi/movil_pucetec_api/assets/103721934/49010cf0-15ea-4a0f-8036-6077078f3cf8)
+![image](https://github.com/csparedes-pucesi/movil_pucetec_api/assets/103721934/2bc7527d-62a4-4627-b983-896571eaad05)
+
 
 
 
@@ -40,6 +42,16 @@ flutter test
 Agrega notas adicionales sobre cómo hacer deploy.
 
 ![image](https://github.com/csparedes-pucesi/movil_pucetec_api/assets/103721934/b92e3517-28de-4534-a887-f7b4670c40db)
+
+## Eliminar productos  
+
+![image](https://github.com/csparedes-pucesi/movil_pucetec_api/assets/103721934/b1722585-e5f8-41ad-aa75-72516088ac58)
+
+## Editar Productos 
+
+![image](https://github.com/csparedes-pucesi/movil_pucetec_api/assets/103721934/6da2d01a-b14d-4a19-a907-7474de37a643)
+
+
 
 
 ###  Construido con 🛠️
@@ -51,7 +63,10 @@ Pub - Manejador de dependencias
 
 Por favor lee el CONTRIBUTING.md para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
 
-Autores ✒️
-Tu Nombre - Tienda Apartado Frutas - Gonzalo Proaño
-Licencia Never Moore - Gonzalo Proaño 
-Este proyecto está bajo la Licencia (Gonzalo Proaño) - mira el archivo LICENSE.md para detalles
+
+>[!TIP]
+>Antes de clonar el repo, estudia las bases de FLUTTER para saber que hace mi codigo :3 
+
+>[!WARNING]
+Este proyecto es OpenSource, solamente da credito al autor Gonzalo Proaño
+
