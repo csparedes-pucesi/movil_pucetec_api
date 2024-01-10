@@ -22,6 +22,25 @@ class ProductModel {
         this.category,
     });
 
+    // Método copyWith
+    ProductModel copyWith({
+      String? id,
+      String? name,
+      double? unitPrice,
+      String? description,
+      String? presentation,
+      CategoryModel? category,
+    }) {
+      return ProductModel(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        unitPrice: unitPrice ?? this.unitPrice,
+        description: description ?? this.description,
+        presentation: presentation ?? this.presentation,
+        category: category ?? this.category,
+      );
+    }
+
     factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["_id"],
         name: json["name"],
@@ -33,7 +52,7 @@ class ProductModel {
         category: json["category"] == null
             ? null
             : CategoryModel.fromJson(json["category"]),
-      );
+    );
 
     Map<String, dynamic> toJson() => {
         "_id": id,
@@ -44,4 +63,3 @@ class ProductModel {
         "category": category?.toJson(),
     };
 }
-

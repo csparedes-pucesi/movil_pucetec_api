@@ -31,37 +31,30 @@ final createProductsProvider =
         "unitPrice": unitPrice,
         "description": ref.watch(descriptionProvider),
         "presentation": ref.watch(presentationProvider),
-        "category":
-            "656f9b2a8e9e07c4d066c18a" // Considera hacerlo dinámico si es necesario
+        "category": "656f9b2a8e9e07c4d066c18a"
       },
     );
 
-    // Manejo de la respuesta
     if (response.statusCode == 201) {
-      // Retorno exitoso
       return {
         "data": response.data,
         "status": response.statusCode,
       };
     } else {
-      // Retorno de respuesta no exitosa
       return {
         "data": response.data,
         "status": response.statusCode,
       };
     }
   } on DioError catch (dioError) {
-    // Captura de errores específicos de Dio
     return {
       "data": dioError.response?.data,
-      "status": dioError.response?.statusCode ??
-          500, // Utiliza el estado de la respuesta si está disponible
+      "status": dioError.response?.statusCode ?? 500,
     };
   } catch (error) {
-    // Captura de cualquier otro error
     return {
       "data": null,
-      "status": 500, // Estado genérico para errores del servidor
+      "status": 500,
     };
   }
 });

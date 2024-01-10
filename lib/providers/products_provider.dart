@@ -21,14 +21,14 @@ final productsProvider =
 
   final List<dynamic> responseData = response.data;
 
-  final List<ProductModel> products = responseData.map((prod){
+  final List<ProductModel> products = responseData.map((prod) {
     return ProductModel.fromJson(prod);
-  }).toList(); 
+  }).toList();
   return products;
 });
 
-
-final productDeletionProvider = FutureProvider.family<void, String>((ref, productId) async {
+final productDeletionProvider =
+    FutureProvider.family<void, String>((ref, productId) async {
   final dio = ref.watch(dioProvider);
   await dio.delete(
     'https://pucei.edu.ec:9108/products/$productId',
@@ -40,3 +40,40 @@ final productDeletionProvider = FutureProvider.family<void, String>((ref, produc
     ),
   );
 });
+
+final productUpdateProvider =
+    FutureProvider.family<void, ProductModel>((ref, product) async {
+  final dio = ref.watch(dioProvider);
+  await dio.put(
+    'https://pucei.edu.ec:9108/products/${product.id}',
+    options: Options(
+      validateStatus: (status) => status! < 500,
+      headers: {
+        "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
+      },
+    ),
+    data: product.toJson(),
+  );
+});
+
+final productSearchProvider =
+    FutureProvider.family<List<ProductModel>, String>((ref, query) async {
+  final dio = ref.watch(dioProvider);
+  final response = await dio.get(
+    'https://pucei.edu.ec:9108/products?name=$query',
+    options: Options(
+      validateStatus: (status) => status! < 500,
+      headers: {
+        "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
+      },
+    ),
+  );
+
+  final List<dynamic> responseData = response.data;
+
+  final List<ProductModel> products = responseData.map((prod) {
+    return ProductModel.fromJson(prod);
+  }).toList();
+  return products;
+});
+
