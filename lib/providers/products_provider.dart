@@ -26,3 +26,17 @@ final productsProvider =
   }).toList(); 
   return products;
 });
+
+
+final productDeletionProvider = FutureProvider.family<void, String>((ref, productId) async {
+  final dio = ref.watch(dioProvider);
+  await dio.delete(
+    'https://pucei.edu.ec:9108/products/$productId',
+    options: Options(
+      validateStatus: (status) => status! < 500,
+      headers: {
+        "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
+      },
+    ),
+  );
+});

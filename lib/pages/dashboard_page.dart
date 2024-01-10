@@ -16,8 +16,8 @@ class DashboardPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Productos'),
-        backgroundColor: Colors.blueGrey, // Color de fondo del AppBar
-        elevation: 0, // Remueve la sombra del AppBar
+        backgroundColor: Colors.blueGrey,
+        elevation: 0,
       ),
       body: productProviderAsync.when(
         data: (products) {
@@ -32,34 +32,91 @@ class DashboardPage extends ConsumerWidget {
                   itemBuilder: (context, pageIndex) {
                     int startIndex = pageIndex * itemsPerPage;
                     int endIndex = startIndex + itemsPerPage;
-                    endIndex = endIndex > products.length ? products.length : endIndex;
-                    var productsInPage = products.getRange(startIndex, endIndex).toList();
+                    endIndex =
+                        endIndex > products.length ? products.length : endIndex;
+                    var productsInPage =
+                        products.getRange(startIndex, endIndex).toList();
 
                     return ListView.separated(
                       padding: const EdgeInsets.all(16),
                       itemCount: productsInPage.length,
-                      separatorBuilder: (_, __) => const Divider(), // Separador
+                      separatorBuilder: (_, __) => const Divider(),
                       itemBuilder: (context, index) {
                         var product = productsInPage[index];
                         return Card(
-                          elevation: 2, // Elevación de la tarjeta
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), // Bordes redondeados
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           child: ListTile(
                             title: Text(
                               product.name ?? 'Producto sin nombre',
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             leading: const CircleAvatar(
-                              // Icono o imagen del producto
                               backgroundColor: Colors.blueGrey,
-                              // Icono o imagen del producto
-                              child: Icon(Icons.shopping_bag_outlined, color: Colors.white),
+                              child: Icon(Icons.shopping_bag_outlined,
+                                  color: Colors.white),
                             ),
-                            subtitle: Text(product.description ?? 'Sin descripción'),
-                            trailing: Text(
-                              "\$${product.unitPrice!.toStringAsFixed(2)}",
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                            subtitle:
+                                Text(product.description ?? 'Sin descripción'),
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "\$${product.unitPrice?.toStringAsFixed(2) ?? 'N/A'}",
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
+                                  onPressed: () async {
+                                    if (product.id != null) {
+                                      final result = await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text(
+                                              'Confirmar Eliminación'),
+                                          content: const Text(
+                                              '¿Estás seguro de que deseas eliminar este producto?'),
+                                          actions: [
+                                            TextButton(
+                                              child: const Text('Cancelar'),
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(false),
+                                            ),
+                                            TextButton(
+                                              child: const Text('Eliminar'),
+                                              onPressed: () =>
+                                                  Navigator.of(context)
+                                                      .pop(true),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+
+                                      if (result == true) {
+                                        await ref.read(
+                                            productDeletionProvider(product.id!)
+                                                .future);
+                                        // ignore: unused_result
+                                        ref.refresh(
+                                            productsProvider); // Refrescar el provider
+                                      }
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  'ID de producto no disponible')));
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -69,7 +126,7 @@ class DashboardPage extends ConsumerWidget {
                 ),
               ),
               Container(
-                color: Colors.white, // Color de fondo para el indicador de páginas
+                color: Colors.white,
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -88,9 +145,10 @@ class DashboardPage extends ConsumerWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: pageController.hasClients && pageController.page!.round() == index
-                              ? Colors.blueGrey // Color cuando la página está activa
-                              : Colors.blueGrey.withOpacity(0.5), // Color inactivo
+                          color: pageController.hasClients &&
+                                  pageController.page!.round() == index
+                              ? Colors.blueGrey
+                              : Colors.blueGrey.withOpacity(0.5),
                         ),
                       ),
                     ),
@@ -104,8 +162,8 @@ class DashboardPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blueGrey, // Color del botón
-        child: const Icon(Icons.add, color: Colors.white), // Icono del botón
+        backgroundColor: Colors.blueGrey,
+        child: const Icon(Icons.add, color: Colors.white),
         onPressed: () {
           ref.read(routerProvider).go(RoutesNames.createProduct);
         },
