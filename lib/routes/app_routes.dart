@@ -28,7 +28,10 @@ final routerConfig = GoRouter(routes: [
     builder: (context, state) => const DashboardPage(),
   ),
   GoRoute(
-    path: RoutesNames.createProduct,
-    builder: (context, state) => const CreateProductPage(),
+    path: "${RoutesNames.createProduct}/:isUpdating?/:productId?",
+    // Actualizar path con el objeto a enviar a la pagina
+    // builder: ( context, state) => const CreateProductPage(isUpdating: state.pathParameters["isUpdating"]),
+    builder: ( context, state) => const CreateProductPage(),
+    
   ),
 ]);

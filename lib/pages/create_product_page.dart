@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+// import 'package:movil_pucetec_api/model/category_model.dart';
 import 'package:movil_pucetec_api/providers/new_product_provider.dart';
 
 class CreateProductPage extends ConsumerWidget {
   const CreateProductPage({super.key});
+
+  final isUpdating = false;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -14,9 +17,15 @@ class CreateProductPage extends ConsumerWidget {
     final TextEditingController presentationController =
         TextEditingController();
 
+    final categoryProviderAsync = ref.watch(categoryProvider);
+    final categSelected = ref.watch(categorySelected);
+
     return Scaffold(
         appBar: AppBar(
-          title: const Text('New Product'),
+          title: isUpdating ? const Text('Update product') : const Text('New Product'),
+          actions: [
+            isUpdating ? IconButton(onPressed: (){}, icon: const Icon(Icons.delete)) : const SizedBox(),
+          ],
         ),
         body: Center(
           child: Column(
@@ -24,6 +33,30 @@ class CreateProductPage extends ConsumerWidget {
               const Text(
                 'Añadir nuevo producto',
                 style: TextStyle(fontSize: 20),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                child: DropdownButton(
+                    isExpanded: true,
+                    value: categSelected,
+                    items: categoryProviderAsync.when(
+                        data: (categories) => categories
+                            .map((category) => DropdownMenuItem(
+                                  value: category.id,
+                                  child: Text(category.name ?? 'Sin nombre'),
+                                ))
+                            .toList(),
+                        error: (_, __) => const [],
+                        loading: () => const []),
+                    onChanged: (val) {
+                      print(val);
+                      ref
+                          .read(categorySelected.notifier)
+                          .update((state) => val as String);
+
+                      // ref.read(categoryIdProvider.notifier).update((state) => null)
+                    }),
               ),
               Padding(
                 padding:
