@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
@@ -80,7 +79,7 @@ class LoginPage extends ConsumerWidget {
                     // 2. guardamos los datos en el shared preferences
                     await SharedPrefs.prefs.setString('token', token);
                     // 3. redireccionamos a la pagina de dashboard
-                    ref.read(RouterProvider).go(RoutesNames.dashboard);
+                    ref.read(routerProvider).go(RoutesNames.dashboard);
                   } else {
                     // Capturar el mensaje desde back
                     final msg = resp["data"]["message"];
