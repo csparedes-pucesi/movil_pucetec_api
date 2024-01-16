@@ -5,7 +5,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/providers/new_product_provider.dart';
 
 class CreateProductPage extends ConsumerWidget {
-  const CreateProductPage({super.key});
+  const CreateProductPage({
+    super.key,
+    });
 
   final isUpdating = false;
 
@@ -22,9 +24,13 @@ class CreateProductPage extends ConsumerWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: isUpdating ? const Text('Update product') : const Text('New Product'),
+          title: isUpdating
+              ? const Text('Update product')
+              : const Text('New Product'),
           actions: [
-            isUpdating ? IconButton(onPressed: (){}, icon: const Icon(Icons.delete)) : const SizedBox(),
+            isUpdating
+                ? IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
+                : const SizedBox(),
           ],
         ),
         body: Center(
