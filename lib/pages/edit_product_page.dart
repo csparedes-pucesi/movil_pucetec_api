@@ -3,32 +3,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/providers/create_products_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
+import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/models/product_model.dart';
+import 'package:dio/dio.dart';
 
-class CreateProductPage extends ConsumerWidget {
-  final ProductModel? productToEdit;
+class EditProductPage extends ConsumerWidget {
+  final ProductModel productToEdit;
 
-  const CreateProductPage({Key? key, this.productToEdit}) : super(key: key);
+  EditProductPage({required this.productToEdit, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController unitPriceController = TextEditingController();
-    final TextEditingController descriptionController = TextEditingController();
+    final TextEditingController nameController =
+        TextEditingController(text: productToEdit.name ?? '');
+    final TextEditingController unitPriceController =
+        TextEditingController(text: productToEdit.unitPrice?.toString() ?? '');
+    final TextEditingController descriptionController =
+        TextEditingController(text: productToEdit.description ?? '');
     final TextEditingController presentationController =
-        TextEditingController();
-
-    if (productToEdit != null) {
-      nameController.text = productToEdit!.name ?? '';
-      unitPriceController.text = productToEdit!.unitPrice?.toString() ?? '';
-      descriptionController.text = productToEdit!.description ?? '';
-      presentationController.text = productToEdit!.presentation ?? '';
-    }
+        TextEditingController(text: productToEdit.presentation ?? '');
 
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(productToEdit == null ? 'Register Product' : 'Edit Product'),
+        title: const Text('Edit Product'),
       ),
       body: SingleChildScrollView(
         child: Center(
@@ -37,10 +34,8 @@ class CreateProductPage extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  productToEdit == null
-                      ? 'Add a new Office supplie product'
-                      : 'Edit the product',
+                const Text(
+                  'Edit the product',
                   style: TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 16),
@@ -48,7 +43,7 @@ class CreateProductPage extends ConsumerWidget {
                   controller: nameController,
                   decoration: InputDecoration(
                     labelText: 'Name',
-                    hintText: 'Add the product name',
+                    hintText: 'Edit the product name',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -59,7 +54,7 @@ class CreateProductPage extends ConsumerWidget {
                   controller: unitPriceController,
                   decoration: InputDecoration(
                     labelText: 'Price',
-                    hintText: 'Add the product price',
+                    hintText: 'Edit the product price',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -70,7 +65,7 @@ class CreateProductPage extends ConsumerWidget {
                   controller: descriptionController,
                   decoration: InputDecoration(
                     labelText: 'Description',
-                    hintText: 'Add the product description',
+                    hintText: 'Edit the product description',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -81,7 +76,7 @@ class CreateProductPage extends ConsumerWidget {
                   controller: presentationController,
                   decoration: InputDecoration(
                     labelText: 'Presentation',
-                    hintText: 'Add the product presentation',
+                    hintText: 'Edit the product presentation',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -98,43 +93,44 @@ class CreateProductPage extends ConsumerWidget {
                     ),
                   ),
                   onPressed: () async {
-                    ref
-                        .read(nameProvider.notifier)
-                        .update((state) => state = nameController.text);
-                    ref
-                        .read(unitPriceProvider.notifier)
-                        .update((state) => state = unitPriceController.text);
-                    ref
-                        .read(descriptionProvider.notifier)
-                        .update((state) => state = descriptionController.text);
-                    ref
-                        .read(presentationProvider.notifier)
-                        .update((state) => state = presentationController.text);
+                    // Obtén los valores de los controladores
+                    final name = nameController.text;
+                    final unitPrice = unitPriceController.text;
+                    final description = descriptionController.text;
+                    final presentation = presentationController.text;
 
-                    if (productToEdit == null) {
-                      final resp =
-                          await ref.read(createProductsProvider.future);
-                      final msg = "Product added: ${resp["data"]["name"]}";
-                      Fluttertoast.showToast(
-                          msg: msg.toString(),
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    } else {
-                      Fluttertoast.showToast(
-                          msg: "Product updated",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    }
+                    // Llama a la función de actualización con estos valores
+                    await ref
+                        .read(nameProvider.notifier)
+                        .update((state) => state = name);
+                    await ref
+                        .read(unitPriceProvider.notifier)
+                        .update((state) => state = unitPrice);
+                    await ref
+                        .read(descriptionProvider.notifier)
+                        .update((state) => state = description);
+                    await ref
+                        .read(presentationProvider.notifier)
+                        .update((state) => state = presentation);
+
+                    // Call the provider for updating the product
+                    final resp = await ref.read(createProductsProvider).value!;
+
+                    final msg = "Product updated: ${resp["data"]["name"]}";
+                    Fluttertoast.showToast(
+                      msg: msg.toString(),
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+
+                    // Refresh the product list
+                    ref.read(routerProvider).go(RoutesNames.dashboard);
                   },
-                  child: Text(productToEdit == null ? 'Add' : 'Update'),
+                  child: const Text('Update'),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
@@ -149,7 +145,7 @@ class CreateProductPage extends ConsumerWidget {
                   onPressed: () async {
                     ref.read(routerProvider).go(RoutesNames.dashboard);
                   },
-                  child: const Text('Regresar'),
+                  child: const Text('Cancel'),
                 ),
               ],
             ),

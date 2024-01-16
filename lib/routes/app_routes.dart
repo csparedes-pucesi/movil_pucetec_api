@@ -12,7 +12,7 @@ class RoutesNames {
   static String createProduct = '/create-product';
 }
 
-final routerProvider = Provider((ref)=>routerConfig); 
+final routerProvider = Provider((ref) => routerConfig);
 
 final routerConfig = GoRouter(routes: [
   GoRoute(
