@@ -10,6 +10,7 @@ class RoutesNames {
   static String register = '/register';
   static String dashboard = '/dashboard';
   static String createProduct = '/create';
+  static String editProduct =  '/edit';
 }
 
 final routerProvider = Provider((ref) => routerConfig);
