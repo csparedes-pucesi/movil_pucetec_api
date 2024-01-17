@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/models/product_model.dart';
 
-final productListProvider = StateProvider<List<dynamic>>((ref) => []);
+final productListProvider = StateProvider((ref) => []);
 
 final dioProvider = Provider<Dio>((ref) => Dio());
-final productProvider =
+final productsProvider =
     FutureProvider.autoDispose<List<ProductModel>>((ref) async {
   final dio = ref.watch(dioProvider);
   final response = await dio.get('https://pucei.edu.ec:9108/products',
