@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/providers/new_product_provider.dart';
+import 'package:movil_pucetec_api/routes/app_routes.dart';
 
 class CreateProductPage extends ConsumerWidget {
   const CreateProductPage({Key? key}) : super(key: key);
