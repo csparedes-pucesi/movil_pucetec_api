@@ -23,6 +23,7 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routerConfig: routerProv,
+      // theme: ThemeCustomData(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:movil_pucetec_api/model/product_model.dart';
 import 'package:movil_pucetec_api/pages/create_product_page.dart';
 import 'package:movil_pucetec_api/pages/dashboard_page.dart';
 import 'package:movil_pucetec_api/pages/login_page.dart';
@@ -25,13 +26,12 @@ final routerConfig = GoRouter(routes: [
   ),
   GoRoute(
     path: RoutesNames.dashboard,
-    builder: (context, state) => const DashboardPage(),
+    builder: (_, __) => const DashboardPage(),
   ),
   GoRoute(
-    path: "${RoutesNames.createProduct}/:isUpdating?/:productId?",
+    path: RoutesNames.createProduct,
     // Actualizar path con el objeto a enviar a la pagina
     // builder: ( context, state) => const CreateProductPage(isUpdating: state.pathParameters["isUpdating"]),
-    builder: ( context, state) => const CreateProductPage(),
-    
+    builder: (context, state) => CreateProductPage(state.extra as ProductModel?),
   ),
 ]);

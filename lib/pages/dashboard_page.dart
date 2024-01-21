@@ -23,6 +23,10 @@ class DashboardPage extends ConsumerWidget {
                                   leading: IconButton(
                                       onPressed: () {
                                         // actualizar redireccion a actualizar producto
+                                        ref.read(routerProvider).push(
+                                          RoutesNames.createProduct,
+                                          extra: product,
+                                        );
                                       },
                                       icon: const Icon(Icons.edit)),
                                   // const Icon(Icons.shopping_bag_outlined),
@@ -40,11 +44,10 @@ class DashboardPage extends ConsumerWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            ref.read(routerProvider).push(RoutesNames.createProduct, extra: {
-              // Buscar manera de enviar datos a la pagina de crear/actualizar producto
-              // "isUpdating": false,
-              // "productID": <jiooijojs>,
-            });
+            ref.read(routerProvider).push(
+              RoutesNames.createProduct,
+              extra: null,
+            );
           },
           child: const Icon(Icons.add),
         ));

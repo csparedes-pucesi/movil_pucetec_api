@@ -36,17 +36,6 @@ final newProductProvider =
       "data": response.data,
       "status": response.statusCode,
     };
-    // if (response.statusCode == 201) {
-    //   return <String, dynamic>{
-    //     "data": response.data,
-    //     "status": response.statusCode,
-    //   };
-    // } else {
-    //   return <String, dynamic>{
-    //     "data": response.data,
-    //     "status": response.statusCode,
-    //   };
-    // }
   } catch (err) {
     return <String, dynamic>{
       "data": null,
@@ -87,5 +76,67 @@ final categoryProvider =
   } catch (e) {
     print(e);
     return [];
+  }
+});
+
+final updateProductProvider = FutureProvider.autoDispose
+    .family<Map<String, dynamic>, String>((ref, idProduct) async {
+  final dio = ref.watch(dioProvider);
+  final double unitPrice = double.parse(ref.watch(unitPriceProvider));
+
+  try {
+    final response = await dio.patch(
+      'https://pucei.edu.ec:9108/products/$idProduct',
+      options: Options(
+        validateStatus: (status) => status! < 500,
+        headers: {
+          "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
+        },
+      ),
+      data: {
+        "name": ref.watch(productNameProvider),
+        "unitPrice": unitPrice,
+        "description": ref.watch(descriptionProvider),
+        "presentation": ref.watch(presentationProvider),
+        // "category": ref.watch(categorySelected),
+      },
+    );
+    return <String, dynamic>{
+      "data": response.data,
+      "status": response.statusCode,
+    };
+  } catch (err) {
+    return <String, dynamic>{
+      "data": null,
+      "status": 400,
+      "error": err.toString(),
+    };
+  }
+});
+
+final deleteProductProvider = FutureProvider.autoDispose
+    .family<Map<String, dynamic>, String>((ref, idProduct) async {
+  final dio = ref.watch(dioProvider);
+
+  try {
+    final response = await dio.delete(
+      'https://pucei.edu.ec:9108/products/$idProduct',
+      options: Options(
+        validateStatus: (status) => status! < 500,
+        headers: {
+          "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
+        },
+      ),
+    );
+    return <String, dynamic>{
+      "data": response.data,
+      "status": response.statusCode,
+    };
+  } catch (err) {
+    return <String, dynamic>{
+      "data": null,
+      "status": 400,
+      "error": err.toString(),
+    };
   }
 });
