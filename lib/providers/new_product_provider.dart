@@ -4,6 +4,7 @@ import 'package:movil_pucetec_api/config/shared_prefs.dart';
 import 'package:movil_pucetec_api/model/category_model.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
+final idProvider = StateProvider<String>((ref) => '');
 final productNameProvider = StateProvider((ref) => '');
 final unitPriceProvider = StateProvider((ref) => '');
 final descriptionProvider = StateProvider((ref) => '');
