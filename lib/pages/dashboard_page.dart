@@ -3,29 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/providers/products_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
-import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/models/product_model.dart';
 import 'package:dio/dio.dart';
 
+import 'package:movil_pucetec_api/providers/create_products_provider.dart';
+
 class DashboardPage extends ConsumerWidget {
-  const DashboardPage({Key? key}) : super(key: key);
+  const DashboardPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final productProviderAsync = ref.watch(productsProvider);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Productos'),
       ),
-      body: Center(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final refreshedProducts = ref.refresh(productsProvider);
+        },
         child: productProviderAsync.when(
           data: (products) => ListView.builder(
             itemCount: products.length,
             itemBuilder: (context, index) {
               var product = products[index];
+
               return ListTile(
-                title: Text(product.name ?? 'Sin nombre'),
+                title: Text(product.name ?? 'Sin Nombre'),
                 leading: const Icon(Icons.shopping_bag_outlined),
                 subtitle: Text(product.description ?? 'Sin Descripcion'),
                 trailing: Row(
@@ -34,50 +38,18 @@ class DashboardPage extends ConsumerWidget {
                     IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                EditProductPage(productToEdit: product),
-                          ),
-                        );
+                        _showEditDialog(context, ref, product);
                       },
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete),
                       onPressed: () async {
-                        final resp = await Dio().delete(
-                          'https://pucei.edu.ec:9108/products/${product.id}',
-                          options: Options(
-                            validateStatus: (status) => status! < 500,
-                            headers: {
-                              "Authorization":
-                                  "Bearer ${SharedPrefs.prefs.getString('token')}"
-                            },
-                          ),
-                        );
-                        if (resp.statusCode == 200) {
-                          ref.refresh(productsProvider);
-                          Fluttertoast.showToast(
-                            msg: "Producto eliminado",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0,
-                          );
-                        } else {
-                          Fluttertoast.showToast(
-                            msg: "Error al eliminar el producto",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0,
-                          );
-                        }
+                        String idproduct = product.id!;
+                        ref
+                            .read(idProvider.notifier)
+                            .update((state) => state = idproduct);
+                        await ref.read(deleteProductProvier.future);
+                        final refreshedProducts = ref.refresh(productsProvider);
                       },
                     ),
                   ],
@@ -85,100 +57,105 @@ class DashboardPage extends ConsumerWidget {
               );
             },
           ),
-          error: (_, error) => const Text("No se pudo cargar la información"),
+          error: (_, error) => const Text("Error al conectar con la Base"),
           loading: () => const CircularProgressIndicator(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          ref.read(routerProvider).go(RoutesNames.createProduct);
-        },
-      ),
+          child: const Icon(Icons.add),
+          onPressed: () {
+            ref.read(routerProvider).go(RoutesNames.createProduct);
+          }),
     );
   }
 }
 
-class EditProductPage extends StatelessWidget {
-  final ProductModel productToEdit;
-
-  const EditProductPage({required this.productToEdit, Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController unitPriceController = TextEditingController();
-    final TextEditingController descriptionController = TextEditingController();
-    final TextEditingController presentationController =
-        TextEditingController();
-
-    nameController.text = productToEdit.name ?? '';
-    unitPriceController.text = productToEdit.unitPrice?.toString() ?? '';
-    descriptionController.text = productToEdit.description ?? '';
-    presentationController.text = productToEdit.presentation ?? '';
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Product'),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextFormField(
+Future<void> _showEditDialog(
+    BuildContext context, WidgetRef ref, ProductModel product) async {
+  final TextEditingController nameController =
+      TextEditingController(text: product.name);
+  final TextEditingController descriptionController =
+      TextEditingController(text: product.description);
+  final TextEditingController unitPriceController =
+      TextEditingController(text: product.unitPrice.toString());
+  final TextEditingController presentationController =
+      TextEditingController(text: product.presentation);
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Editar Producto'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              TextField(
                 controller: nameController,
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  hintText: 'Add the product name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
+                decoration:
+                    const InputDecoration(hintText: "Nombre del Producto"),
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: unitPriceController,
-                decoration: InputDecoration(
-                  labelText: 'Price',
-                  hintText: 'Add the product price',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
+              TextField(
                 controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'Add the product description',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
+                decoration: const InputDecoration(hintText: "Descripción"),
               ),
-              const SizedBox(height: 16),
-              TextFormField(
+              TextField(
+                controller: unitPriceController,
+                decoration: const InputDecoration(hintText: "Precio"),
+                keyboardType: TextInputType.number,
+              ),
+              TextField(
                 controller: presentationController,
-                decoration: InputDecoration(
-                  labelText: 'Presentation',
-                  hintText: 'Add the product presentation',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Update Product'),
+                decoration: const InputDecoration(hintText: "Presentacion"),
+                keyboardType: TextInputType.number,
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Cancelar'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: const Text('Aceptar'),
+            onPressed: () async {
+              ref
+                  .read(idProvider.notifier)
+                  .update((state) => state = product.id!);
+              ref
+                  .read(nameProvider.notifier)
+                  .update((state) => state = nameController.text);
+              ref
+                  .read(unitPriceProvider.notifier)
+                  .update((state) => state = unitPriceController.text);
+              ref
+                  .read(descriptionProvider.notifier)
+                  .update((state) => state = descriptionController.text);
+              ref
+                  .read(presentationProvider.notifier)
+                  .update((state) => state = presentationController.text);
+              ref
+                  .read(categoryProvider.notifier)
+                  .update((state) => state = product.category!.id!);
+              final resp = await ref.read(editProductProvier.future);
+              final refreshedProducts = ref.refresh(productsProvider);
+
+              final msg =
+                  // ignore: prefer_interpolation_to_compose_strings
+                  "Se ha actualizado correctamente: " + resp["data"]["name"];
+              Fluttertoast.showToast(
+                  msg: msg.toString(),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

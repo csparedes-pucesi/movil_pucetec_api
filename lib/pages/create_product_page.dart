@@ -6,9 +6,7 @@ import 'package:movil_pucetec_api/routes/app_routes.dart';
 import 'package:movil_pucetec_api/models/product_model.dart';
 
 class CreateProductPage extends ConsumerWidget {
-  final ProductModel? productToEdit;
-
-  const CreateProductPage({Key? key, this.productToEdit}) : super(key: key);
+  const CreateProductPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,79 +16,80 @@ class CreateProductPage extends ConsumerWidget {
     final TextEditingController presentationController =
         TextEditingController();
 
-    if (productToEdit != null) {
-      nameController.text = productToEdit!.name ?? '';
-      unitPriceController.text = productToEdit!.unitPrice?.toString() ?? '';
-      descriptionController.text = productToEdit!.description ?? '';
-      presentationController.text = productToEdit!.presentation ?? '';
-    }
-
     return Scaffold(
       appBar: AppBar(
-        title:
-            Text(productToEdit == null ? 'Register Product' : 'Edit Product'),
+        title: const Text('Registrar Producto de oficina'),
       ),
       body: SingleChildScrollView(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  productToEdit == null
-                      ? 'Add a new Office supplie product'
-                      : 'Edit the product',
-                  style: TextStyle(fontSize: 18),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Añadir un producto de oficina',
+                style: TextStyle(fontSize: 18),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TextFormField(
                   controller: nameController,
                   decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Add the product name',
+                    labelText: 'Nombre',
+                    hintText: 'Ingrese el nombre ',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TextFormField(
                   controller: unitPriceController,
                   decoration: InputDecoration(
-                    labelText: 'Price',
-                    hintText: 'Add the product price',
+                    labelText: 'Precio',
+                    hintText: 'Ingrese el precio unitario',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TextFormField(
                   controller: descriptionController,
                   decoration: InputDecoration(
-                    labelText: 'Description',
-                    hintText: 'Add the product description',
+                    labelText: 'Descripcion',
+                    hintText: 'Ingrese la descripcion',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                TextFormField(
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TextFormField(
                   controller: presentationController,
                   decoration: InputDecoration(
-                    labelText: 'Presentation',
-                    hintText: 'Add the product presentation',
+                    labelText: 'Presentacion',
+                    hintText: 'Ingrese la presentacion',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                ElevatedButton(
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -111,35 +110,26 @@ class CreateProductPage extends ConsumerWidget {
                         .read(presentationProvider.notifier)
                         .update((state) => state = presentationController.text);
 
-                    if (productToEdit == null) {
-                      final resp =
-                          await ref.read(createProductsProvider.future);
-                      final msg = "Product added: ${resp["data"]["name"]}";
-                      Fluttertoast.showToast(
-                          msg: msg.toString(),
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    } else {
-                      Fluttertoast.showToast(
-                          msg: "Product updated",
-                          toastLength: Toast.LENGTH_SHORT,
-                          gravity: ToastGravity.CENTER,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0);
-                    }
+                    final resp = await ref.read(createProductsProvider.future);
+
+                    final msg =
+                        // ignore: prefer_interpolation_to_compose_strings
+                        "Se ha agregado correctamente: " + resp["data"]["name"];
+                    Fluttertoast.showToast(
+                        msg: msg.toString(),
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.CENTER,
+                        timeInSecForIosWeb: 1,
+                        fontSize: 16.0);
                   },
-                  child: Text(productToEdit == null ? 'Add' : 'Update'),
+                  child: const Text('Agregar'),
                 ),
-                const SizedBox(height: 16),
-                ElevatedButton(
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blue),
                     shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -151,8 +141,8 @@ class CreateProductPage extends ConsumerWidget {
                   },
                   child: const Text('Regresar'),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

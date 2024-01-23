@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 
 import 'routes/app_routes.dart';
+import 'package:movil_pucetec_api/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +21,8 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final routerProv = ref.watch(routerProvider);
     return MaterialApp.router(
+      theme: AppTheme().theme(),
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routerConfig: routerProv,
     );
