@@ -105,6 +105,7 @@ class CreateProductPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: TextFormField(
+                keyboardType: TextInputType.number,
                 controller: unitPriceController,
                 decoration: InputDecoration(
                   labelText: 'Precio del producto:',

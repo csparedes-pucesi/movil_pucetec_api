@@ -27,9 +27,11 @@ class LoginPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: TextFormField(
+                
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
                 decoration: InputDecoration(
+                  suffixIcon: const Icon(Icons.email),
                   labelText: 'Email',
                   hintText: 'Ingrese su email',
                   border: OutlineInputBorder(
@@ -44,6 +46,7 @@ class LoginPage extends ConsumerWidget {
                 controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
+                  suffixIcon: const Icon(Icons.lock),
                   labelText: 'Password',
                   hintText: 'Ingrese su password',
                   border: OutlineInputBorder(
