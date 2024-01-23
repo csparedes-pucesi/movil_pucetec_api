@@ -21,6 +21,12 @@ class LoginPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.network(
+              'https://img.zcool.cn/community/0180b65af0400aa801219b7fe7ee6b.png@1280w_1l_2o_100sh.png',
+              width: 200,
+              height: 200,
+              fit: BoxFit.cover,
+            ),
             const Text(
               'Welcome to the PUCETEC Shop!',
               style: TextStyle(fontSize: 24),

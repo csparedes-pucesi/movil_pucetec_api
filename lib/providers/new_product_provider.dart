@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movil_pucetec_api/config/shared_prefs.dart';
+import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 
 final dioProvider = Provider<Dio>((ref) => Dio());
 final productNameProvider = StateProvider((ref) => '');

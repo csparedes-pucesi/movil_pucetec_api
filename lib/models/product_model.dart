@@ -1,9 +1,4 @@
-// To parse this JSON data, do
-//
-//     final welcome = welcomeFromJson(jsonString);
-
 import 'dart:convert';
-
 import 'package:movil_pucetec_api/models/category_model.dart';
 
 ProductModel productModelFromJson(String str) =>
@@ -12,12 +7,12 @@ ProductModel productModelFromJson(String str) =>
 String productModelToJson(ProductModel data) => json.encode(data.toJson());
 
 class ProductModel {
-  String id;
-  String name;
-  int unitPrice;
-  String description;
-  String presentation;
-  Category category;
+  final String? id;
+  final String? name;
+  final double? unitPrice;
+  final String? description;
+  final String? presentation;
+  final Category? category;
 
   ProductModel({
     required this.id,
@@ -31,10 +26,12 @@ class ProductModel {
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["_id"],
         name: json["name"],
-        unitPrice: json["unitPrice"],
+        unitPrice: json["unitPrice"] is int
+          ?(json["unitPrice"] as int).toDouble()
+          : json["unitPrice"] as double?,
         description: json["description"],
         presentation: json["presentation"],
-        category: Category.fromJson(json["category"]),
+        category: json["category"] == null ? null : Category.fromJson(json["category"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,6 +40,6 @@ class ProductModel {
         "unitPrice": unitPrice,
         "description": description,
         "presentation": presentation,
-        "category": category.toJson(),
+        "category": category?.toJson(),
       };
 }
