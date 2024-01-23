@@ -10,8 +10,8 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
@@ -24,11 +24,16 @@ class LoginPage extends ConsumerWidget {
               'Welcome to the PUCETEC Shop!',
               style: TextStyle(fontSize: 24),
             ),
+            Image.asset(
+              'img/logo.jpg',
+              width: 200,
+              height: 200,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
-                controller: _emailController,
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   hintText: 'Ingrese su email',
@@ -41,7 +46,7 @@ class LoginPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: TextFormField(
-                controller: _passwordController,
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -66,10 +71,10 @@ class LoginPage extends ConsumerWidget {
                 onPressed: () async {
                   ref
                       .read(emailProvider.notifier)
-                      .update((state) => state = _emailController.text);
+                      .update((state) => state = emailController.text);
                   ref
                       .read(passProvider.notifier)
-                      .update((state) => state = _passwordController.text);
+                      .update((state) => state = passwordController.text);
 
                   final resp = await ref.read(loginProvider.future);
 

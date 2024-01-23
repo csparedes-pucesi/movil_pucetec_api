@@ -18,7 +18,10 @@ class DashboardPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: Center(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final refreshedProducts = ref.refresh(productsProvider);
+        },
         child: productProviderAsync.when(
           data: (products) => ListView.builder(
             itemCount: products.length,

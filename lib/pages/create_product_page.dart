@@ -45,7 +45,7 @@ class CreateProduct extends ConsumerWidget {
                 controller: unitPriceController,
                 decoration: InputDecoration(
                   labelText: 'Precio',
-                  hintText: 'Ingrese del producto',
+                  hintText: 'Ingrese el producto',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
