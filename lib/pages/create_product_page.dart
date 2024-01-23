@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/model/product_model.dart';
 // import 'package:movil_pucetec_api/model/category_model.dart';
 import 'package:movil_pucetec_api/providers/new_product_provider.dart';
+import 'package:movil_pucetec_api/providers/products_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
 
 class CreateProductPage extends ConsumerWidget {
@@ -161,6 +162,7 @@ class CreateProductPage extends ConsumerWidget {
                           unitPriceController,
                           descriptionController,
                           presentationController);
+      
                 },
               ),
             ),
