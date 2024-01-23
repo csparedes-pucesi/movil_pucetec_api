@@ -16,22 +16,32 @@ class DashboardPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: productProviderAsync.when(
-            data: (products) => Column(
-              children: products
-                  .asMap()
-                  .entries
-                  .map(
-                    (entry) =>
-                        _buildProductCard(entry.value, entry.key, context, ref),
-                  )
-                  .toList(),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          // Lógica para recargar los productos
+          await ref.refresh(productsProvider);
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: productProviderAsync.when(
+              data: (products) => Column(
+                children: products
+                    .asMap()
+                    .entries
+                    .map(
+                      (entry) => _buildProductCard(
+                        entry.value,
+                        entry.key,
+                        context,
+                        ref,
+                      ),
+                    )
+                    .toList(),
+              ),
+              error: (_, __) => const Text('No se pudo cargar la data'),
+              loading: () => const CircularProgressIndicator(),
             ),
-            error: (_, __) => const Text('No se pudo cargar la data'),
-            loading: () => const CircularProgressIndicator(),
           ),
         ),
       ),
