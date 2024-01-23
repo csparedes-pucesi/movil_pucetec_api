@@ -19,7 +19,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final routerProv = ref.watch(routerProvider);
     return MaterialApp.router(
-      theme: AppTheme().theme(),
+      theme: AppTheme(selectedColor: 1).theme(),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routerConfig: routerProv,

@@ -5,7 +5,7 @@ import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
 
-final imagePathProvider = Provider<String>((ref) => '/img/logo.jpg');
+final imagePathProvider = Provider<String>((ref) => 'img/logo.jpg');
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
@@ -30,6 +30,15 @@ class LoginPage extends ConsumerWidget {
               imagePath,
               width: 200,
               height: 200,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ElevatedButton(
+              onPressed: (){
+                
+
+              },
+              child: const Text('Cambiar de Tema')),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -106,6 +115,7 @@ class LoginPage extends ConsumerWidget {
                 child: const Text('Login'),
               ),
             ),
+            
           ],
         ),
       ),
