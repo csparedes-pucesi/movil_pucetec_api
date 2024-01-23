@@ -1,79 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:movil_pucetec_api/configs/shared_prefs.dart';
-import 'package:movil_pucetec_api/models/product_model.dart';
+import 'package:movil_pucetec_api/config/shared_prefs.dart';
+import 'package:movil_pucetec_api/model/product_model.dart';
 
-final productListProvider = StateProvider((ref) => []);
+final productListProvider = StateProvider<List<dynamic>>((ref) => []);
 
 final dioProvider = Provider<Dio>((ref) => Dio());
-final productsProvider =
+final productProvider =
     FutureProvider.autoDispose<List<ProductModel>>((ref) async {
   final dio = ref.watch(dioProvider);
-  final response = await dio.get(
-    'https://pucei.edu.ec:9108/products',
-    options: Options(
-      validateStatus: (status) => status! < 500,
-      headers: {
-        "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
-      },
-    ),
-  );
-
+  final response = await dio.get('https://pucei.edu.ec:9108/products',
+      options: Options(
+        validateStatus: (status) => status! < 500,
+        headers: {
+          "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
+        },
+      ));
   final List<dynamic> responseData = response.data;
-
   final List<ProductModel> products = responseData.map((prod) {
     return ProductModel.fromJson(prod);
   }).toList();
   return products;
 });
-
-final productDeletionProvider =
-    FutureProvider.family<void, String>((ref, productId) async {
-  final dio = ref.watch(dioProvider);
-  await dio.delete(
-    'https://pucei.edu.ec:9108/products/$productId',
-    options: Options(
-      validateStatus: (status) => status! < 500,
-      headers: {
-        "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
-      },
-    ),
-  );
-});
-
-final productUpdateProvider =
-    FutureProvider.family<void, ProductModel>((ref, product) async {
-  final dio = ref.watch(dioProvider);
-  await dio.put(
-    'https://pucei.edu.ec:9108/products/${product.id}',
-    options: Options(
-      validateStatus: (status) => status! < 500,
-      headers: {
-        "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
-      },
-    ),
-    data: product.toJson(),
-  );
-});
-
-final productSearchProvider =
-    FutureProvider.family<List<ProductModel>, String>((ref, query) async {
-  final dio = ref.watch(dioProvider);
-  final response = await dio.get(
-    'https://pucei.edu.ec:9108/products?name=$query',
-    options: Options(
-      validateStatus: (status) => status! < 500,
-      headers: {
-        "Authorization": "Bearer ${SharedPrefs.prefs.getString('token')}"
-      },
-    ),
-  );
-
-  final List<dynamic> responseData = response.data;
-
-  final List<ProductModel> products = responseData.map((prod) {
-    return ProductModel.fromJson(prod);
-  }).toList();
-  return products;
-});
-
