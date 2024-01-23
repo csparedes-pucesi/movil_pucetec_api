@@ -18,7 +18,10 @@ class DashboardPage extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
-      body: Center(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final refreshedProducts = ref.refresh(productsProvider);
+        },
         child: productProviderAsync.when(
           data: (products) => ListView.builder(
             itemCount: products.length,
@@ -137,7 +140,7 @@ Future<void> _showEditDialog(
               final resp = await ref.read(editProductProvier.future);
               final refreshedProducts = ref.refresh(productsProvider);
               // ignore: prefer_interpolation_to_compose_strings
-              final msg = "Producto Agregado: "+resp["data"]["name"];
+              final msg = "Producto Actualizado: " + resp["data"]["name"];
               Fluttertoast.showToast(
                   msg: msg.toString(),
                   toastLength: Toast.LENGTH_SHORT,

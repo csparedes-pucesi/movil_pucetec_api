@@ -5,13 +5,15 @@ import 'package:movil_pucetec_api/configs/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
 
+final imagePathProvider = Provider<String>((ref) => '/img/logo.jpg');
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+    final imagePath = ref.watch(imagePathProvider);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
@@ -24,10 +26,15 @@ class LoginPage extends ConsumerWidget {
               'Welcome to the PUCETEC Shop!',
               style: TextStyle(fontSize: 24),
             ),
+            Image.asset(
+              imagePath,
+              width: 200,
+              height: 200,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: TextFormField(
-                controller: _emailController,
+                controller: emailController,
                 decoration: InputDecoration(
                   labelText: 'Email',
                   hintText: 'Ingrese su email',
@@ -41,7 +48,7 @@ class LoginPage extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: TextFormField(
                 keyboardType: TextInputType.emailAddress,
-                controller: _passwordController,
+                controller: passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Password',
@@ -56,7 +63,6 @@ class LoginPage extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.blue),
                   shape: MaterialStateProperty.all(
                     RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
@@ -66,10 +72,10 @@ class LoginPage extends ConsumerWidget {
                 onPressed: () async {
                   ref
                       .read(emailProvider.notifier)
-                      .update((state) => state = _emailController.text);
+                      .update((state) => state = emailController.text);
                   ref
                       .read(passProvider.notifier)
-                      .update((state) => state = _passwordController.text);
+                      .update((state) => state = passwordController.text);
 
                   final resp = await ref.read(loginProvider.future);
 
