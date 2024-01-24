@@ -30,7 +30,7 @@ final newProductProvider =
         "unitPrice": unitPrice,
         "description": ref.watch(descriptionProvider),
         "presentation": ref.watch(presentationProvider),
-        "category": "656f9afb8e9e07c4d066c184"
+        "category": "656f9b6f8e9e07c4d066c193"
       },
     );
 

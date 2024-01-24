@@ -1,6 +1,8 @@
+// import 'package:flutter/material.dart ';
+
 import 'package:flutter/material.dart';
 
-const Color _customColor = Color.fromARGB(255, 9, 168, 216);
+const Color _customColor = Color.fromARGB(255, 77, 189, 237);
 const List<Color> _colorTheme = [
   _customColor,
   Colors.blue,
@@ -8,18 +10,18 @@ const List<Color> _colorTheme = [
   Colors.green,
   Colors.orange,
   Colors.yellow,
-  Colors.pink,
+  Colors.pink
 ];
 
 class AppTheme {
   final int selectedColor;
-
-  AppTheme({this.selectedColor = 0});
+  final bool isDark;
+  AppTheme({required this.selectedColor, required this.isDark});
   ThemeData theme() {
     return ThemeData(
       useMaterial3: true,
       colorSchemeSeed: _colorTheme[selectedColor],
-      brightness: Brightness.dark,
+      brightness: isDark == true ? Brightness.dark : Brightness.light,
     );
   }
 }

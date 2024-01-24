@@ -4,6 +4,7 @@ import 'package:movil_pucetec_api/config/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:movil_pucetec_api/theme/theme_provider.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -22,13 +23,27 @@ class LoginPage extends ConsumerWidget {
           children: [
             Image.asset(
               'img/tech_logo_3.png',
-              width: 200,
-              height: 200,
+              width: 250,
+              height: 250,
               fit: BoxFit.cover,
             ),
             const Text(
               'Welcome to the PUCETEC Shop!',
               style: TextStyle(fontSize: 24),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: ElevatedButton(
+                  onPressed: () {
+                    // Actualizar
+                    ref.read(themeProvider.notifier).update(
+                      // (state) => !state
+                      (state) {
+                        return state = !state;
+                      },
+                    );
+                  },
+                  child: const Text('Cambiar de Tema')),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
