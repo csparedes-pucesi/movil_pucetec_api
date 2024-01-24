@@ -16,14 +16,14 @@ class CreateProducts extends ConsumerWidget {
         TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registrar Ropa'),
+        title: const Text('Registrar'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Añadir un nuevo producto de categoria Ropa',
+              'Añadir un nuevo producto ',
               style: TextStyle(fontSize: 18),
             ),
             Padding(
@@ -32,7 +32,7 @@ class CreateProducts extends ConsumerWidget {
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: 'Nombre',
-                  hintText: 'Ingrese el nombre de la Ropa',
+                  hintText: 'Ingrese el nombre del producto',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),

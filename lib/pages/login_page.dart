@@ -28,8 +28,8 @@ class LoginPage extends ConsumerWidget {
               fit: BoxFit.cover,
             ),
             const Text(
-              'Welcome to the PUCETEC Shop!',
-              style: TextStyle(fontSize: 24),
+              'Bienvenidos a  PUCETEC ',
+              style: TextStyle(fontSize: 26),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -56,6 +56,7 @@ class LoginPage extends ConsumerWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
+                  prefixIcon: Icon(Icons.email), // Icono de correo electrónico
                 ),
               ),
             ),
@@ -70,6 +71,7 @@ class LoginPage extends ConsumerWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
+                  prefixIcon: Icon(Icons.lock), // Icono de contraseña
                 ),
               ),
             ),
