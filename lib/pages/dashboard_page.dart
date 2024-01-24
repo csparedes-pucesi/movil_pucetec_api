@@ -11,14 +11,16 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Obtén el proveedor de productos
     final productProviderAsync = ref.watch(productsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
       ),
       body: RefreshIndicator(
+        // Implementa la lógica de recarga aquí
         onRefresh: () async {
-          // Lógica para recargar los productos
           await ref.refresh(productsProvider);
         },
         child: SingleChildScrollView(
@@ -89,11 +91,7 @@ class DashboardPage extends ConsumerWidget {
             const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () async {
-                String idproduct = product.id!;
-                ref.read(idProvider.notifier)
-                  ..update((state) => state = idproduct);
-                await ref.read(deleteProductProvier.future);
-                final refreshedProducts = ref.refresh(productsProvider);
+                // ... (tu lógica para eliminar)
               },
               child: const Icon(Icons.delete, color: Colors.white),
               style: ElevatedButton.styleFrom(

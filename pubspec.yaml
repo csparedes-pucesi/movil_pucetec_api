@@ -1,39 +1,37 @@
 name: movil_pucetec_api
 description: A new Flutter project.
-# The following line prevents the package from being accidentally published to
-# pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+# La siguiente línea evita que el paquete se publique accidentalmente en pub.dev usando `flutter pub publish`.
+# Esto es preferido para paquetes privados.
+publish_to: 'none' # Elimina esta línea si deseas publicar en pub.dev
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-# Read more about iOS versioning at
+# La siguiente define la versión y el número de compilación para tu aplicación.
+# Un número de versión consta de tres números separados por puntos, como 1.2.43,
+# seguido opcionalmente por un número de compilación separado por un +.
+# Tanto la versión como el número de compilación pueden anularse en el flutter
+# build especificando --build-name y --build-number, respectivamente.
+# En Android, build-name se usa como versionName mientras que build-number se usa como versionCode.
+# Lee más sobre la versión de Android en https://developer.android.com/studio/publish/versioning
+# En iOS, build-name se usa como CFBundleShortVersionString mientras que build-number se usa como CFBundleVersion.
+# Lee más sobre la versión de iOS en
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-# In Windows, build-name is used as the major, minor, and patch parts
-# of the product and file versions while build-number is used as the build suffix.
+# En Windows, build-name se usa como las partes mayor, menor y de parche
+# de las versiones de producto y de archivo, mientras que build-number se usa como el sufijo de compilación.
 version: 1.0.0+1
 
 environment:
   sdk: '>=3.1.5 <4.0.0'
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
+# Dependencias especifican otros paquetes que tu paquete necesita para funcionar.
+# Para actualizar automáticamente las dependencias de tu paquete a las últimas versiones
+# considera ejecutar `flutter pub upgrade --major-versions`. Alternativamente,
+# las dependencias se pueden actualizar manualmente cambiando los números de versión a continuación a
+# la última versión disponible en pub.dev. Para ver qué dependencias tienen versiones más recientes disponibles,
+# ejecuta `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  # Añade las dependencias de tus paquetes aquí
   cupertino_icons: ^1.0.2
   go_router: ^12.1.1
   flutter_riverpod: ^2.4.9
@@ -46,23 +44,29 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
+  # El paquete "flutter_lints" a continuación contiene un conjunto de lints recomendados para
+  # fomentar buenas prácticas de codificación. El conjunto de lints proporcionado por el paquete está
+  # activado en el archivo `analysis_options.yaml` ubicado en la raíz de tu
+  # paquete. Consulta ese archivo para obtener información sobre cómo desactivar reglas de lints específicas
+  # y activar otras adicionales.
   flutter_lints: ^2.0.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+# Para obtener información sobre la parte genérica de Dart de este archivo, consulta la
+# siguiente página: https://dart.dev/tools/pub/pubspec
 
-# The following section is specific to Flutter packages.
+# La siguiente sección es específica de los paquetes Flutter.
 flutter:
+  assets:
+    - img/descarga.jpeg
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
+
+  # La siguiente línea asegura que la fuente de Material Icons esté
+  # incluida con tu aplicación, para que puedas usar los íconos en
+  # la clase de Material Icons.
   uses-material-design: true
+
+  
+  
 
   # To add assets to your application, add an assets section, like this:
   # assets:
