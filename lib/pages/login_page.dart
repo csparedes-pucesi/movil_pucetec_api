@@ -20,8 +20,8 @@ class LoginPage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.network(
-              'https://static.rfstat.com/logo-presets/2231/thumbnail_4ccda0cdfea4_1x.webp',
+            Image.asset(
+              'img/tech_logo_3.png',
               width: 200,
               height: 200,
               fit: BoxFit.cover,
