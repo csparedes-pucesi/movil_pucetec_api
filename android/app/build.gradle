@@ -30,7 +30,8 @@ def keystoreProperties = new Properties()
 
 android {
     namespace "ec.pucetec.movilPucetec20232024"
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
+    // compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -89,4 +90,5 @@ flutter {
 
 dependencies {
     implementation 'com.google.android.material:material:1.11.0'
+    // classpath 'com.android.tools.build:gradle:7.0.2'
 }
