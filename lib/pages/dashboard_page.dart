@@ -11,7 +11,6 @@ class DashboardPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Obtén el proveedor de productos
     final productProviderAsync = ref.watch(productsProvider);
 
     return Scaffold(
@@ -19,7 +18,6 @@ class DashboardPage extends ConsumerWidget {
         title: const Text('Dashboard'),
       ),
       body: RefreshIndicator(
-        // Implementa la lógica de recarga aquí
         onRefresh: () async {
           await ref.refresh(productsProvider);
         },
@@ -91,7 +89,8 @@ class DashboardPage extends ConsumerWidget {
             const SizedBox(width: 8),
             ElevatedButton(
               onPressed: () async {
-                // ... (tu lógica para eliminar)
+                // Lógica para eliminar el producto
+                await _showDeleteConfirmationDialog(context, ref, product);
               },
               child: const Icon(Icons.delete, color: Colors.white),
               style: ElevatedButton.styleFrom(
@@ -246,4 +245,42 @@ class DashboardPage extends ConsumerWidget {
       },
     );
   }
+}
+
+Future<void> _showDeleteConfirmationDialog(
+  BuildContext context,
+  WidgetRef ref,
+  ProductModel product,
+) async {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Confirmar Eliminación'),
+        content:
+            const Text('¿Estás seguro de que quieres eliminar este producto?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () async {
+              // Lógica para eliminar el producto
+              await ref
+                  .read(idProvider.notifier)
+                  .update((state) => state = product.id!);
+              await ref.read(deleteProductProvier.future);
+              final refreshedProducts = ref.refresh(productsProvider);
+              Navigator.of(context)
+                  .pop(); // Cerrar el diálogo después de eliminar
+            },
+            child: const Text('Sí'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Cerrar el diálogo sin eliminar
+            },
+            child: const Text('No'),
+          ),
+        ],
+      );
+    },
+  );
 }

@@ -2,106 +2,96 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/providers/new_product_provider.dart';
-//import 'package:movil_pucetec_api/models/category_model.dart';
+import 'package:movil_pucetec_api/routes/app_routes.dart';
 
-class CreateProductPage extends ConsumerWidget {
-  const CreateProductPage({
-    super.key,
-  });
+class CreateProductPage extends ConsumerStatefulWidget {
+  const CreateProductPage({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController productNameController = TextEditingController();
+  ConsumerState<CreateProductPage> createState() => _CreateProductState();
+}
+
+class _CreateProductState extends ConsumerState<CreateProductPage> {
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController nameController = TextEditingController();
     final TextEditingController unitPriceController = TextEditingController();
     final TextEditingController descriptionController = TextEditingController();
     final TextEditingController presentationController =
         TextEditingController();
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nuevo Producto'),
-        backgroundColor:
-            Colors.blue, // Cambiar el color de la barra de navegación
+        title: const Text('Registrar Ropa'),
+        backgroundColor: Colors.blue,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Añadir Nuevo Producto',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 24.0),
-            _buildTextField(
-              controller: productNameController,
-              labelText: 'Nombre del Producto',
-              hintText: 'Ingrese el nombre del producto',
-              icon: Icons.shopping_bag_outlined, // Icono de bolsa de compras
-            ),
-            const SizedBox(height: 16.0),
-            _buildTextField(
-              controller: unitPriceController,
-              labelText: 'Precio del Producto',
-              hintText: 'Ingrese el precio',
-              icon: Icons.attach_money_outlined, // Icono de dinero
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 16.0),
-            _buildTextField(
-              controller: descriptionController,
-              labelText: 'Descripción del Producto',
-              hintText: 'Describa el producto',
-              icon: Icons.article_outlined, // Icono de documento de texto
-              maxLines: 3,
-            ),
-            const SizedBox(height: 16.0),
-            _buildTextField(
-              controller: presentationController,
-              labelText: 'Presentación del Producto',
-              hintText: 'Describa la presentación',
-              icon: Icons.archive_outlined, // Icono de archivo
-              maxLines: 3,
-            ),
-            const SizedBox(height: 24.0),
-            ElevatedButton(
-              onPressed: () async {
-                ref
-                    .read(productNameProvider.notifier)
-                    .update((state) => state = productNameController.text);
-                ref
-                    .read(unitPriceProvider.notifier)
-                    .update((state) => state = unitPriceController.text);
-                ref
-                    .read(descriptionProvider.notifier)
-                    .update((state) => state = descriptionController.text);
-                ref
-                    .read(presentationProvider.notifier)
-                    .update((state) => state = presentationController.text);
-
-                final resp = await ref.read(newProductProvider.future);
-                final message = "Agregado: ${resp["data"]["name"]}";
-                Fluttertoast.showToast(
-                  msg: message.toString(),
-                  toastLength: Toast.LENGTH_SHORT,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.blue,
-                  textColor: Colors.white,
-                  fontSize: 16,
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                primary: Colors.blue, // Cambiar el color del botón
-              ),
-              child: const Text(
-                'Guardar',
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Añadir un nuevo producto',
                 style: TextStyle(fontSize: 18),
               ),
-            ),
-          ],
+              _buildTextField(
+                controller: nameController,
+                labelText: 'Nombre',
+                hintText: 'Ingrese el nombre de la Ropa',
+                icon: Icons.shopping_bag_outlined,
+              ),
+              _buildTextField(
+                controller: unitPriceController,
+                labelText: 'Precio',
+                hintText: 'Ingrese el precio unitario de producto',
+                icon: Icons.attach_money_outlined,
+              ),
+              _buildTextField(
+                controller: descriptionController,
+                labelText: 'Descripcion',
+                hintText: 'Ingrese la descripcion del Producto',
+                icon: Icons.article_outlined,
+              ),
+              _buildTextField(
+                controller: presentationController,
+                labelText: 'Presentacion',
+                hintText: 'Ingrese la presentacion del producto',
+                icon: Icons.archive_outlined,
+              ),
+              _buildElevatedButton(
+                onPressed: () async {
+                  ref
+                      .read(nameProvider.notifier)
+                      .update((state) => state = nameController.text);
+                  ref
+                      .read(unitPriceProvider.notifier)
+                      .update((state) => state = unitPriceController.text);
+                  ref
+                      .read(descriptionProvider.notifier)
+                      .update((state) => state = descriptionController.text);
+                  ref
+                      .read(presentationProvider.notifier)
+                      .update((state) => state = presentationController.text);
+
+                  final resp = await ref.read(newProductProvider.future);
+                  final msg = "Producto Agregado: " + resp["data"]["name"];
+                  Fluttertoast.showToast(
+                    msg: msg.toString(),
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.CENTER,
+                    timeInSecForIosWeb: 1,
+                    fontSize: 16.0,
+                  );
+                },
+                label: 'Agregar',
+              ),
+              _buildElevatedButton(
+                onPressed: () async {
+                  ref.read(routerProvider).go(RoutesNames.dashboard);
+                },
+                label: 'Regresar',
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -111,22 +101,41 @@ class CreateProductPage extends ConsumerWidget {
     required TextEditingController controller,
     required String labelText,
     required String hintText,
-    int maxLines = 1,
-    TextInputType? keyboardType,
-    IconData? icon,
+    required IconData icon,
   }) {
-    return TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        prefixIcon: icon != null ? Icon(icon) : null,
-        contentPadding: const EdgeInsets.all(16),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: labelText,
+          hintText: hintText,
+          prefixIcon: Icon(icon),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildElevatedButton({
+    required VoidCallback onPressed,
+    required String label,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: ElevatedButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          backgroundColor: MaterialStateProperty.all(Colors.blue),
+        ),
+        onPressed: onPressed,
+        child: Text(label),
       ),
     );
   }
