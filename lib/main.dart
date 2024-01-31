@@ -21,7 +21,7 @@ class MyApp extends ConsumerWidget {
     final routerProv = ref.watch(routerProvider);
     final themeProv = ref.watch(themeProvider);
     return MaterialApp.router(
-      theme: AppTheme(selectedColor: 2, isDark: themeProv).theme(),
+      theme: AppTheme(selectedColor: 3, isDark: themeProv).theme(),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       routerConfig: routerProv,

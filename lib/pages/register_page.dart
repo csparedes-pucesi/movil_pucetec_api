@@ -11,7 +11,7 @@ class RegisterPage extends StatelessWidget {
       ),
       body: const Center(
         child: Text(
-          'bienvenido a la página de registro',
+          'Welcome to Register Page!',
           style: TextStyle(fontSize: 24),
         ),
       ),

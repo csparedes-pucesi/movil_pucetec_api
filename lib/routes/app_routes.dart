@@ -22,7 +22,7 @@ final routerConfig = GoRouter(routes: [
   ),
   GoRoute(
     path: RoutesNames.createProduct,
-    builder: (context, state) => const CreateProducts(),
+    builder: (context, state) => const CreateProduct(),
   ),
   GoRoute(
     path: RoutesNames.register,

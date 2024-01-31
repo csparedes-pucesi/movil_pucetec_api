@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -9,93 +7,68 @@ import 'package:movil_pucetec_api/providers/products_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
 
 class DashboardPage extends ConsumerWidget {
-  const DashboardPage({super.key});
+  const DashboardPage({Key? key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productProviderAsync = ref.watch(productProvider);
+    final productProviderAsync = ref.watch(productsProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Dashboard'),
+        title: const Text('Dashboard',
+            style: TextStyle(
+                color: Colors.white)), // Cambia el color del texto del título
+        backgroundColor: const Color.fromARGB(255, 14, 87,
+            146), // Cambia el color de fondo de la barra de navegación
       ),
-      body: Center(
+      body: RefreshIndicator(
+        onRefresh: () async {
+          final refreshedProducts = ref.refresh(productsProvider);
+        },
         child: productProviderAsync.when(
           data: (products) => ListView.builder(
             itemCount: products.length,
             itemBuilder: (context, index) {
               var product = products[index];
-              return Card(
-                elevation: 3,
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: ListTile(
-                  title: Text(product.name ?? 'Sin Nombre'),
-                  leading: Container(
-                    padding: EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.indigo, // Cambia el color del borde aquí
-                      ),
+              return ListTile(
+                title: Text(product.name ?? 'Sin Nombre',
+                    style: TextStyle(
+                        fontSize:
+                            18.0)), // Cambia el tamaño de fuente del título
+                leading: const Icon(Icons.shopping_bag_outlined),
+                subtitle: Text(product.description ?? 'Sin Descripcion'),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        _showEditDialog(context, ref, product);
+                      },
                     ),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: const Icon(Icons.shopping_cart),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () async {
+                        String idproduct = product.id!;
+                        ref
+                            .read(idProvider.notifier)
+                            .update((state) => state = idproduct);
+                        await ref.read(deleteProductProvier.future);
+                        final refreshedProducts = ref.refresh(productsProvider);
+                      },
                     ),
-                  ),
-                  subtitle: Text(product.description ?? 'Sin Descripcion'),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          _showEditDialog(context, ref, product);
-                        },
-                        icon: const Icon(Icons.edit),
-                        label: const Text(
-                          'Editar',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.indigo,
-                          onPrimary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24.0),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton.icon(
-                        onPressed: () async {
-                          String idproduct = product.id!;
-                          ref
-                              .read(idProvider.notifier)
-                              .update((state) => state = idproduct);
-                          await ref.read(deleteProductProvier.future);
-                          final refreshedProducts =
-                              ref.refresh(productProvider);
-                        },
-                        icon: const Icon(Icons.remove_circle),
-                        label: const Text(
-                          'Eliminar',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.redAccent,
-                          onPrimary: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24.0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  ],
                 ),
               );
             },
           ),
-          error: (_, error) =>
-              Center(child: Text("Error al conectar con la Base")),
-          loading: () => const CircularProgressIndicator(),
+          error: (_, error) => const Center(
+              child: Text("Error al conectar con la Base",
+                  style: TextStyle(
+                      color:
+                          Colors.red))), // Cambia el color del texto de error
+          loading: () => const Center(
+              child:
+                  CircularProgressIndicator()), // Centra el indicador de carga
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -103,6 +76,7 @@ class DashboardPage extends ConsumerWidget {
         onPressed: () {
           ref.read(routerProvider).go(RoutesNames.createProduct);
         },
+        backgroundColor: Colors.blue, // Cambia el color del botón flotante
       ),
     );
   }
@@ -122,27 +96,29 @@ Future<void> _showEditDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('Editar Producto'),
+        title: const Text('Editar Producto',
+            style: TextStyle(
+                color: Colors.blue)), // Cambia el color del texto del título
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              TextFormField(
+              TextField(
                 controller: nameController,
                 decoration:
-                    const InputDecoration(labelText: "Nombre del Producto"),
+                    const InputDecoration(hintText: "Nombre del Producto"),
               ),
-              TextFormField(
+              TextField(
                 controller: descriptionController,
-                decoration: const InputDecoration(labelText: "Descripción"),
+                decoration: const InputDecoration(hintText: "Descripción"),
               ),
-              TextFormField(
+              TextField(
                 controller: unitPriceController,
-                decoration: const InputDecoration(labelText: "Precio"),
+                decoration: const InputDecoration(hintText: "Precio"),
                 keyboardType: TextInputType.number,
               ),
-              TextFormField(
+              TextField(
                 controller: presentationController,
-                decoration: const InputDecoration(labelText: "Presentacion"),
+                decoration: const InputDecoration(hintText: "Presentacion"),
                 keyboardType: TextInputType.number,
               ),
             ],
@@ -150,12 +126,15 @@ Future<void> _showEditDialog(
         ),
         actions: <Widget>[
           TextButton(
-            child: const Text('Cancelar'),
+            child: const Text('Cancelar',
+                style: TextStyle(
+                    color: Colors.red)), // Cambia el color del texto del botón
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          ElevatedButton.icon(
+          IconButton(
+            icon: const Icon(Icons.beenhere_rounded),
             onPressed: () async {
               ref
                   .read(idProvider.notifier)
@@ -176,30 +155,18 @@ Future<void> _showEditDialog(
                   .read(categoryProvider.notifier)
                   .update((state) => state = product.category!.id!);
               final resp = await ref.read(editProductProvier.future);
-              final refreshedProducts = ref.refresh(productProvider);
-              final msg = "Producto Agregado: ${resp["data"]["name"]}";
+              final refreshedProducts = ref.refresh(productsProvider);
+              // ignore: prefer_interpolation_to_compose_strings
+              final msg = "Producto Actualizado: " + resp["data"]["name"];
               Fluttertoast.showToast(
-                msg: msg.toString(),
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.green,
-                textColor: Colors.white,
-                fontSize: 16.0,
-              );
+                  msg: msg.toString(),
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.CENTER,
+                  timeInSecForIosWeb: 4,
+                  backgroundColor: Color.fromARGB(255, 17, 132, 167),
+                  textColor: Colors.white,
+                  fontSize: 16.0);
             },
-            icon: const Icon(Icons.save),
-            label: const Text(
-              'Guardar',
-              style: TextStyle(fontSize: 14),
-            ),
-            style: ElevatedButton.styleFrom(
-              primary: Colors.teal,
-              onPrimary: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24.0),
-              ),
-            ),
           ),
         ],
       );

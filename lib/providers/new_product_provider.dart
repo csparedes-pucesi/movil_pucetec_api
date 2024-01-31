@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movil_pucetec_api/config/shared_prefs.dart';
 
-final productNameProvider = StateProvider<String>((ref) => '');
 final idProvider = StateProvider<String>((ref) => '');
 final nameProvider = StateProvider<String>((ref) => '');
 final unitPriceProvider = StateProvider<String>((ref) => '');
@@ -10,7 +9,7 @@ final descriptionProvider = StateProvider<String>((ref) => '');
 final presentationProvider = StateProvider<String>((ref) => '');
 final categoryProvider = StateProvider<String>((ref) => '');
 final dioProvider = Provider<Dio>((ref) => Dio());
-final newProductProvider =
+final createProductsProvider =
     FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
   final dio = ref.watch(dioProvider);
   final String unitPriceString = ref.watch(unitPriceProvider);

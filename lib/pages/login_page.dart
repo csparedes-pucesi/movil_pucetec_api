@@ -1,39 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/config/shared_prefs.dart';
 import 'package:movil_pucetec_api/providers/auth_provider.dart';
 import 'package:movil_pucetec_api/routes/app_routes.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:movil_pucetec_api/theme/theme_provider.dart';
 
+final imagePathProvider = Provider<String>((ref) => 'img/logo.jpg');
+
 class LoginPage extends ConsumerWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Login Page'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'img/tech_logo_3.png',
-              width: 250,
-              height: 250,
-              fit: BoxFit.cover,
-            ),
-            const Text(
-              'Bienvenidos a  PUCETEC ',
-              style: TextStyle(fontSize: 26),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: ElevatedButton(
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Bienvenido a PUCETEC',
+                style: TextStyle(fontSize: 24),
+              ),
+              Image.asset(
+                'img/tech_logo_3.png',
+                width: 180,
+                height: 180,
+                fit: BoxFit.cover,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: ElevatedButton(
                   onPressed: () {
                     // Actualizar
                     ref.read(themeProvider.notifier).update(
@@ -43,92 +47,93 @@ class LoginPage extends ConsumerWidget {
                       },
                     );
                   },
-                  child: const Text('Cambiar de Tema')),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                controller: _emailController,
-                decoration: InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Ingrese su email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  prefixIcon: Icon(Icons.email), // Icono de correo electrónico
+                  child: const Text('Cambiar de Tema'),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Ingrese su password',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  prefixIcon: Icon(Icons.lock), // Icono de contraseña
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.teal),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TextFormField(
+                  controller: emailController,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'Ingrese su email',
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    prefixIcon:
+                        Icon(Icons.email), // Icono de correo electrónico
                   ),
                 ),
-                onPressed: () async {
-                  // Navigator.pushNamed(context, '/dashboard');
-                  print(
-                      "${_emailController.text}: ${_passwordController.text}");
-
-                  ref
-                      .read(emailProvider.notifier)
-                      .update((state) => state = _emailController.text);
-                  ref
-                      .read(passProvider.notifier)
-                      .update((state) => state = _passwordController.text);
-
-                  final resp = await ref.read(loginProvider.future);
-                  print(resp);
-                  if (resp['status'] == 200) {
-                    // capturamos los datos
-                    final token = resp['data']['token'];
-                    // guardar los datos en el shared preferences
-                    await SharedPrefs.prefs.setString('token', token);
-                    // redireccionamos a la pagina de dashboard
-                    ref.read(routerProvider).go(RoutesNames.dashboard);
-                  } else {
-                    // capturar los mensajes desde backend
-                    final msg = resp['data']['message'];
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    hintText: 'Ingrese su password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    prefixIcon: Icon(Icons.lock), // Icono de candado
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  onPressed: () async {
                     ref
-                        .read(msgProvider.notifier)
-                        .update((state) => msg.toString());
+                        .read(emailProvider.notifier)
+                        .update((state) => state = emailController.text);
+                    ref
+                        .read(passProvider.notifier)
+                        .update((state) => state = passwordController.text);
 
-                    Fluttertoast.showToast(
+                    final resp = await ref.read(loginProvider.future);
+
+                    if (resp["status"] == 200) {
+                      // 1. capturamos los datos
+                      final token = resp["data"]["token"];
+                      // 2. guardamos los datos en el shared preferences
+                      await SharedPrefs.prefs.setString('token', token);
+                      // 3. redireccionamos a la pagina de dashboard
+                      ref.read(routerProvider).go(RoutesNames.dashboard);
+                    } else {
+                      // Capturar el mensaje desde back
+                      final msg = resp["data"]["message"];
+                      // Guardar el mensaje en el provider
+                      ref
+                          .read(msgProvider.notifier)
+                          .update((state) => msg.toString());
+                      Fluttertoast.showToast(
                         msg: msg.toString(),
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.CENTER,
                         timeInSecForIosWeb: 1,
                         backgroundColor: Colors.red,
                         textColor: Colors.white,
-                        fontSize: 16.0);
-                  }
-                },
-                child:
-                    const Text('Login', style: TextStyle(color: Colors.white)),
+                        fontSize: 16.0,
+                      );
+                    }
+                  },
+                  child: const Text('Login'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
